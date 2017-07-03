@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.codepath.apps.restclienttemplate.ComposeActivity">
+
+    <!--<android.support.design.widget.TextInputLayout-->
+        <!--android:id="@+id/textContainer"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:counterEnabled="true"-->
+        <!--app:counterMaxLength="20"-->
+        <!--&gt;-->
+
+    <EditText
+        android:id="@+id/tweetHere"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+
+        tools:ignore="MissingConstraints"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="38dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+    <!--change this line as well-->
+
+    <!--</android.support.design.widget.TextInputLayout>-->
+
+    <Button
+        android:id="@+id/go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:onClick="returnTweet"
+        android:layout_below="@+id/tweetHere"
+
+
+        android:layout_alignParentBottom="true"
+       />
+
+    <TextView
+        android:id="@+id/characterCount"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="140" />
+
+    <!--# you wanna change this above line miss-->
+
+</RelativeLayout>
