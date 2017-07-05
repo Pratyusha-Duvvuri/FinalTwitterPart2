@@ -39,7 +39,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 //                rvTweets.setAdapter(tweetAdapter);
 
     // pass in the Tweets array in the constructor
-    public static List<Tweet> mTweets;
+    public List<Tweet> mTweets;
     Context context;
     TwitterClient client;
     public String relTime;

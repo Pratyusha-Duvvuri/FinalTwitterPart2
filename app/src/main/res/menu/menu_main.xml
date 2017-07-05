@@ -18,6 +18,12 @@
         android:orderInCategory="100"
         app:showAsAction="always"
         app:actionLayout="@layout/action_view_progress" />
+    <item
+        android:id="@+id/miProfile"
+        android:icon="@drawable/ic_person_white_24dp"
+        android:title="Item"
+        android:onClick="onProfileView"
+        app:showAsAction="ifRoom" />
 
 </menu>
 
