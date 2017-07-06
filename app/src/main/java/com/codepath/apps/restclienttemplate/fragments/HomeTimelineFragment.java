@@ -25,8 +25,16 @@ public class HomeTimelineFragment extends TweetsListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = TwitterApp.getRestClient();
+
+
+
         populateTimeline();
+
+
+
     }
+
+
 
     private void populateTimeline(){
         //showProgressBar();
