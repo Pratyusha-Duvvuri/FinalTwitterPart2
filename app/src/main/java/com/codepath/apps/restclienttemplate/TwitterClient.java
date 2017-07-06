@@ -121,11 +121,11 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, null, handler);
 	}
 
-	public void search( AsyncHttpResponseHandler handler, String Id ) {
-		String apiUrl = getApiUrl("statuses/home_timeline.json");
+	public void searchQuery( String query, AsyncHttpResponseHandler handler ) {
+		String apiUrl = getApiUrl("search/tweets.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("q" , Id);
+		params.put("q" , query);
 		client.get(apiUrl, params, handler);
 	}
 
