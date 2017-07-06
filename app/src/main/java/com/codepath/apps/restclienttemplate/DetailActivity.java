@@ -90,7 +90,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-
     public void onSubmit(View v) {
         // closes the activity and returns to first screen
         this.finish();
@@ -117,7 +116,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
                     }
                 });
-
 
             } else {
                 client.favoriteTweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {

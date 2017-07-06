@@ -1,10 +1,11 @@
 package com.codepath.apps.restclienttemplate.fragments;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
  */
 
 public class TweetsListFragment extends Fragment {
-
 
 
 
@@ -57,9 +57,6 @@ public class TweetsListFragment extends Fragment {
         //set the adapter
 
         rvTweets.setAdapter(tweetAdapter);
-
-
-
         return v;
     }
 
@@ -79,12 +76,21 @@ public class TweetsListFragment extends Fragment {
             try {
                 tweet = Tweet.fromJSON(response.getJSONObject(i));
                 tweets.add(tweet);
-                tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                tweetAdapter.notifyItemInserted(i);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
+
+        }
+
+        public void addTweet(Tweet tweet){
+            Log.d("rrr",""+tweet.uid);
+            tweets.add(0,tweet);
+            tweetAdapter.notifyItemInserted(0);
+            rvTweets.scrollToPosition(0);
+
 
         }
     }

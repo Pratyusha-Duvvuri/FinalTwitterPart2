@@ -140,10 +140,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
        // @SuppressLint("WrongViewCast")
         public ViewHolder(View itemView){
-                super(itemView);
+            super(itemView);
             // perform findViewById lookups
 
-            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
+            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfilePic);
+            ivProfileImage.setOnClickListener(this);
+
             tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTimeStamp = (TextView) itemView.findViewById(R.id.tvTimeStamp);
@@ -194,8 +196,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     if(tweet.retweet_status){
                         tweet.retweet_count-=1;
                         //TweetAdapter.this.notify();
-
-
 
                         client.unretweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
 
@@ -255,7 +255,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                             }
                         });
 
-
                     }
                     else{
                     client.favoriteTweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
@@ -273,8 +272,21 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         }
                     });}
                 }
-             else {
+                else if (v.getId() == R.id.ivProfilePic) {
+                    Toast.makeText(context, "Clicked Image", Toast.LENGTH_SHORT).show();
+
                     //Toast.makeText(context, "Going to Details", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("screen_name",tweet.user.screenName);
+                    intent.putExtra("mark",false);
+                    intent.putExtra("tweet", tweet);//Parcels.wrap(t)
+
+                    context.startActivity(intent);
+
+                }
+
+             else {
+                    Toast.makeText(context, "Going to Details", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, DetailActivity.class);
                     // serialize the movie using parceler, use its short name as a key
                     intent.putExtra("tweet", tweet);//Parcels.wrap(t)
@@ -283,24 +295,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     //context.startActivityforResult(intent, REQUEST_CODE);
                     context.startActivity(intent);
 
+
              }
-                Toast.makeText(context, "Going to Details", Toast.LENGTH_SHORT).show();
-
-
-                //mTweets.add(0, tweet);
-                //tweetAdapter.notifyItemInserted(0);
-                //TweetAdapter.this.notifyItemInserted(0);
-                //rvTweets.scrollToPosition(0);
 
             }
 
-
-
         }
 
-
         }
-
 
     // Clean all elements of the recycler
     public void clear() {
@@ -314,4 +316,3 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 }
-

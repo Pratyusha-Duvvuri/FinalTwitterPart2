@@ -47,12 +47,12 @@ public class UserTimelineFragment extends TweetsListFragment {
         client.getUserTimeline( screenName, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                //Log.d("TwitterClient", response.toString() )    ;
+                Log.d("TwitterClient", response.toString() )    ;
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
+                Log.d("TwitterClient", response.toString() )    ;
                 addItems(response);
 
             }
