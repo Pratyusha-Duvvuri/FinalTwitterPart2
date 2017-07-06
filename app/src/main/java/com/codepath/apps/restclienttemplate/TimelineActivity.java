@@ -109,11 +109,6 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
 
-        // Expand the search view and request focus
-        searchItem.expandActionView();
-        searchView.requestFocus();
-
-
         return super.onCreateOptionsMenu(menu);
 
     }
