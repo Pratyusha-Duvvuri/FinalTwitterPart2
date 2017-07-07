@@ -20,6 +20,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,8 @@ public class TweetsListFragment extends Fragment {
     RecyclerView rvTweets;
     SwipeRefreshLayout swipeContainer;
     TwitterClient client;
+    public static int page;
+
 
 
 
@@ -73,7 +76,7 @@ public class TweetsListFragment extends Fragment {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                fetchTimelineAsync(0);
+                fetchTimelineAsync(TweetsListFragment.page);
             }
         });
         // Configure the refreshing colors
@@ -86,47 +89,110 @@ public class TweetsListFragment extends Fragment {
 
 
     public void fetchTimelineAsync(int page) {
+
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
         // getHomeTimeline is an example endpoint.
         //if(tweetsPagerAdapter.getItem()==0){}
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                //Toast.makeText(TimelineActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
-                // Remember to CLEAR OUT old items before appending in the new ones
-                tweetAdapter.clear();
-                // ...the data has come back, add new items to your adapter...
+        if (page == 0) {
+            client.getHomeTimeline(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    //Toast.makeText(TimelineActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
+                    // Remember to CLEAR OUT old items before appending in the new ones
+                    tweetAdapter.clear();
+                    // ...the data has come back, add new items to your adapter...
 
 
-                for(int i =0;i< response.length();i++) {
+                    for (int i = 0; i < response.length(); i++) {
 
-                    //convert eachobject to a Tweet model
-                    //add that Tweet model to our data source
-                    //notify the adapter that we've added an item
-                    Tweet tweet = null;
+                        //convert eachobject to a Tweet model
+                        //add that Tweet model to our data source
+                        //notify the adapter that we've added an item
+                        Tweet tweet = null;
 
-                    try {
-                        tweet = Tweet.fromJSON(response.getJSONObject(i));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        try {
+                            tweet = Tweet.fromJSON(response.getJSONObject(i));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        tweets.add(tweet);
+                        tweetAdapter.notifyItemInserted(tweets.size() - 1);
                     }
-                    tweets.add(tweet);
-                    tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                    //tweetAdapter.addAll(tweets);
+                    //tweetAdapter.notifyDataSetChanged();
+
+                    // Now we call setRefreshing(false) to signal refresh has finished
+                    swipeContainer.setRefreshing(false);
                 }
-                //tweetAdapter.addAll(tweets);
-                //tweetAdapter.notifyDataSetChanged();
 
-                // Now we call setRefreshing(false) to signal refresh has finished
-                swipeContainer.setRefreshing(false);
-            }
+                public void onFailure(Throwable e) {
+                    Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+                    Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+                }
+            });
 
-            public void onFailure(Throwable e) {
-                Log.d("DEBUG", "Fetch timeline error: " + e.toString());
-                Log.d("DEBUG", "Fetch timeline error: " + e.toString());
-            }
-        });
+        }
+        else
+        {
 
+            client.getMentionsTimeline( new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("TwitterClient", response.toString() )    ;
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        //Toast.makeText(TimelineActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
+                        // Remember to CLEAR OUT old items before appending in the new ones
+                        tweetAdapter.clear();
+                        // ...the data has come back, add new items to your adapter...
+
+
+                        for (int i = 0; i < response.length(); i++) {
+
+                            //convert eachobject to a Tweet model
+                            //add that Tweet model to our data source
+                            //notify the adapter that we've added an item
+                            Tweet tweet = null;
+
+                            try {
+                                tweet = Tweet.fromJSON(response.getJSONObject(i));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            tweets.add(tweet);
+                            tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                        }
+                        //tweetAdapter.addAll(tweets);
+                        //tweetAdapter.notifyDataSetChanged();
+
+                        // Now we call setRefreshing(false) to signal refresh has finished
+                        swipeContainer.setRefreshing(false);
+                    }
+
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("TwitterClient", responseString )    ;
+                    throwable.printStackTrace();
+                }
+
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString() )    ;
+                    throwable.printStackTrace();            }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString() )    ;
+                    throwable.printStackTrace();             }
+            });
+
+
+        }
     }
 
     public void addItems(JSONArray response){
@@ -162,7 +228,11 @@ public class TweetsListFragment extends Fragment {
 
 
         }
+
+    public static void setPage(int page) {
+        TweetsListFragment.page = page;
     }
+}
 
 
 

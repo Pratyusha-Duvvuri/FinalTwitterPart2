@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import com.codepath.apps.restclienttemplate.fragments.HomeTimelineFragment;
+import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.fragments.TweetsPagerAdapter;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
@@ -32,6 +33,7 @@ public class TimelineActivity extends AppCompatActivity {
     HomeTimelineFragment frag;
     ViewPager vpPager;
     LinearLayoutManager llayout;
+    Integer tabPosition;
 
 
     @Override
@@ -68,6 +70,16 @@ public class TimelineActivity extends AppCompatActivity {
          vpPager = (ViewPager) findViewById(R.id.viewpager);
         //set the adapter for the pager
         vpPager.setAdapter(adapter);
+        vpPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageSelected(int position) {
+                //get an object
+                //use this to set the page number to whatever using the setter
+                // Check if this is the page you want.
+                TweetsListFragment.setPage(position);
+            }
+        });
         // setup the tab layout to use the view pager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(vpPager);
