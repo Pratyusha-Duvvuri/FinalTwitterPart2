@@ -85,8 +85,7 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/ivDetailsProfile"
-        android:layout_marginStart="17dp" />
+        android:layout_toEndOf="@+id/ivDetailsProfile" />
 
     <ImageView
         android:id="@+id/ivDetailsLoadedImage"

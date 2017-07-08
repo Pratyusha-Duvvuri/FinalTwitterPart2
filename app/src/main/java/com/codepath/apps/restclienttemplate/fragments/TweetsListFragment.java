@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TweetAdapter;
 import com.codepath.apps.restclienttemplate.TwitterApp;
@@ -33,15 +34,13 @@ import cz.msebera.android.httpclient.Header;
 public class TweetsListFragment extends Fragment {
 
 
-
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
     SwipeRefreshLayout swipeContainer;
     TwitterClient client;
     public static int page;
-
-
+    private EndlessRecyclerViewScrollListener scrollListener;
 
 
     //inflation happens inside onCreateView
@@ -51,7 +50,7 @@ public class TweetsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         //inflate the layout
-        View v = inflater.inflate(R.layout.fragments_tweets_list, container,false);
+        View v = inflater.inflate(R.layout.fragments_tweets_list, container, false);
         client = TwitterApp.getRestClient();
 
 
@@ -64,7 +63,8 @@ public class TweetsListFragment extends Fragment {
         tweetAdapter = new TweetAdapter(tweets);
         //RecyclerView setup ( layout manager, use adapter)
         //llayout= new LinearLayoutManager(getContext()) ;
-        rvTweets.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager llayout = new LinearLayoutManager(getContext());
+        rvTweets.setLayoutManager(llayout);
 
         //set the adapter
 
@@ -84,6 +84,18 @@ public class TweetsListFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(llayout) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+
+        rvTweets.addOnScrollListener(scrollListener);
+
         return v;
     }
 
@@ -132,76 +144,76 @@ public class TweetsListFragment extends Fragment {
                 }
             });
 
-        }
-        else
-        {
+        } else {
 
-            client.getMentionsTimeline( new JsonHttpResponseHandler(){
+            client.getMentionsTimeline(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    Log.d("TwitterClient", response.toString() )    ;
+                    Log.d("TwitterClient", response.toString());
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        //Toast.makeText(TimelineActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
-                        // Remember to CLEAR OUT old items before appending in the new ones
-                        tweetAdapter.clear();
-                        // ...the data has come back, add new items to your adapter...
+                    //Toast.makeText(TimelineActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
+                    // Remember to CLEAR OUT old items before appending in the new ones
+                    tweetAdapter.clear();
+                    // ...the data has come back, add new items to your adapter...
 
 
-                        for (int i = 0; i < response.length(); i++) {
+                    for (int i = 0; i < response.length(); i++) {
 
-                            //convert eachobject to a Tweet model
-                            //add that Tweet model to our data source
-                            //notify the adapter that we've added an item
-                            Tweet tweet = null;
+                        //convert eachobject to a Tweet model
+                        //add that Tweet model to our data source
+                        //notify the adapter that we've added an item
+                        Tweet tweet = null;
 
-                            try {
-                                tweet = Tweet.fromJSON(response.getJSONObject(i));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            tweets.add(tweet);
-                            tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                        try {
+                            tweet = Tweet.fromJSON(response.getJSONObject(i));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        //tweetAdapter.addAll(tweets);
-                        //tweetAdapter.notifyDataSetChanged();
-
-                        // Now we call setRefreshing(false) to signal refresh has finished
-                        swipeContainer.setRefreshing(false);
+                        tweets.add(tweet);
+                        tweetAdapter.notifyItemInserted(tweets.size() - 1);
                     }
+                    //tweetAdapter.addAll(tweets);
+                    //tweetAdapter.notifyDataSetChanged();
+
+                    // Now we call setRefreshing(false) to signal refresh has finished
+                    swipeContainer.setRefreshing(false);
+                }
 
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Log.d("TwitterClient", responseString )    ;
+                    Log.d("TwitterClient", responseString);
                     throwable.printStackTrace();
                 }
 
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("TwitterClient", errorResponse.toString() )    ;
-                    throwable.printStackTrace();            }
+                    Log.d("TwitterClient", errorResponse.toString());
+                    throwable.printStackTrace();
+                }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    Log.d("TwitterClient", errorResponse.toString() )    ;
-                    throwable.printStackTrace();             }
+                    Log.d("TwitterClient", errorResponse.toString());
+                    throwable.printStackTrace();
+                }
             });
 
 
         }
     }
 
-    public void addItems(JSONArray response){
+    public void addItems(JSONArray response) {
 
 
         //iterate through the JSON array
         // for each entry, deserialize the JSON onject
 
-        for(int i =0;i< response.length();i++) {
+        for (int i = 0; i < response.length(); i++) {
 
             //convert eachobject to a Tweet model
             //add that Tweet model to our data source
@@ -218,20 +230,154 @@ public class TweetsListFragment extends Fragment {
 
         }
 
-        }
+    }
 
-        public void addTweet(Tweet tweet){
-            Log.d("rrr",""+tweet.uid);
-            tweets.add(0,tweet);
-            tweetAdapter.notifyItemInserted(0);
-            rvTweets.scrollToPosition(0);
+    public void addTweet(Tweet tweet) {
+        Log.d("rrr", "" + tweet.uid);
+        tweets.add(0, tweet);
+        tweetAdapter.notifyItemInserted(0);
+        rvTweets.scrollToPosition(0);
 
 
-        }
+    }
 
     public static void setPage(int page) {
         TweetsListFragment.page = page;
     }
+
+
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        long Id = tweets.get(tweets.size() - 1).uid;
+        // Toast.makeText(this, ""+Id, Toast.LENGTH_SHORT).show();
+        if (page == 0) {
+            client.getHomeTimelineEndless(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("TwitterClient", response.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    //iterate through the JSON array
+                    // for each entry, deserialize the JSON onject
+
+                    for (int i = 0; i < response.length(); i++) {
+
+                        //convert each object to a Tweet model
+                        //add that Tweet model to our data source
+                        //notify the adapter that we've added an item
+                        Tweet tweet = null;
+
+                        try {
+                            tweet = Tweet.fromJSON(response.getJSONObject(i));
+                            tweets.add(tweet);
+                            tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("TwitterClient", responseString);
+                    throwable.printStackTrace();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                    throwable.printStackTrace();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                    throwable.printStackTrace();
+                }
+            }, Id);
+        } else {
+            client.getMentionsTimelineEndless(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("TwitterClient", response.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    //iterate through the JSON array
+                    // for each entry, deserialize the JSON onject
+
+                    for (int i = 0; i < response.length(); i++) {
+
+                        //convert each object to a Tweet model
+                        //add that Tweet model to our data source
+                        //notify the adapter that we've added an item
+                        Tweet tweet = null;
+
+                        try {
+                            tweet = Tweet.fromJSON(response.getJSONObject(i));
+                            tweets.add(tweet);
+                            tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("TwitterClient", responseString);
+                    throwable.printStackTrace();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                    throwable.printStackTrace();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                    throwable.printStackTrace();
+                }
+            }, Id);
+        }
+
+
+    }
+
+
+
+//    //    //this is for the intermediate progress bar
+//    MenuItem miActionProgressItem;
+//    ProgressBar v;
+//    @Override
+//    public void onPrepareOptionsMenu(Menu menu) {
+//        // Store instance of the menu item containing progress
+//        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+//        // Extract the action-view from the menu item
+//        v = (ProgressBar) MenuItemCompat.getActionView(miActionProgressItem);
+//        // Return to finish
+//        //populateTimeline();
+//
+//        //return super.onPrepareOptionsMenu(menu);
+//    }
+//    public void showProgressBar() {
+//        // Show progress item
+//        miActionProgressItem.setVisible(true);
+//    }
+//
+//    public void hideProgressBar() {
+//        // Hide progress item
+//        miActionProgressItem.setVisible(false);
+//    }
+
+
 }
 
 

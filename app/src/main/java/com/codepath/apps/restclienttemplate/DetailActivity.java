@@ -39,10 +39,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     //public TextView tvBody;
 
     Tweet tweet;
-//    //    private final int RESULT_OK = 10;
+  //    private final int RESULT_OK = 10;
 
     //These values are seperate
-    public String rightUrl;
     TwitterClient client;
     public String relTime;
 
@@ -90,10 +89,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    public void onSubmit(View v) {
-        // closes the activity and returns to first screen
-        this.finish();
-    }
+
 
     @Override
     public void onClick(View v) {
@@ -102,6 +98,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         if (v.getId() == R.id.ivDetailLike) {
             Log.d("Cont", "favorite");
             if (tweet.favorite_status) {
+                tweet.favorite_count-=1;
+                favorite.setImageResource(R.drawable.ic_vector_heart_stroke);
+
+                favoriteCount.setText(""+tweet.favorite_count);
 
                 client.unfavoriteTweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
 
@@ -118,6 +118,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 });
 
             } else {
+                tweet.favorite_count+=1;
+                favorite.setImageResource(R.drawable.ic_vector_heart);
+
+                favoriteCount.setText(""+tweet.favorite_count);
+
                 client.favoriteTweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -132,10 +137,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
                 });
             }
+            tweet.favorite_status = !tweet.favorite_status;
+
         } else if (v.getId() == R.id.ivDetailReply) {
 
             if (tweet.retweet_status) {
-                tweet.retweet_count -= 1;
+                tweet.retweet_count-=1;
+                retweetCount.setText(""+tweet.retweet_count);
+
+                retweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
 
 
                 client.unretweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
@@ -153,7 +163,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 });
 
             } else {
-                tweet.retweet_count += 1;
+                tweet.retweet_count+=1;
+                retweet.setImageResource(R.drawable.ic_vector_retweet);
+
+                retweetCount.setText(""+tweet.retweet_count);
 
                 client.retweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
 
@@ -169,6 +182,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
             }
+            tweet.retweet_status = !tweet.retweet_status;
 
 
         }

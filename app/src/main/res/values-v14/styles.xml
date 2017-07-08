@@ -6,7 +6,24 @@
         res/values-v11/styles.xml on API 14+ devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- API 14 theme customizations can go here. -->
+
+        <!-- Main theme colors -->
+        <!--   your app branding color for the app bar -->
+        <item name="colorPrimary">@color/darkblue</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="colorPrimaryDark">@color/purple</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="colorAccent">@color/twitter_blue_50</item>
+
     </style>
+    <!--<style name="AppTheme" parent="android:Theme.Material">-->
+        <!--&lt;!&ndash; Main theme colors &ndash;&gt;-->
+        <!--&lt;!&ndash;   your app branding color for the app bar &ndash;&gt;-->
+        <!--<item name="android:colorPrimary">@color/blue</item>-->
+        <!--&lt;!&ndash;   darker variant for the status bar and contextual app bars &ndash;&gt;-->
+        <!--<item name="android:colorPrimaryDark">@color/purple</item>-->
+        <!--&lt;!&ndash;   theme UI controls like checkboxes and text fields &ndash;&gt;-->
+        <!--<item name="android:colorAccent">@color/green</item>-->
+    <!--</style>-->
 
 </resources>

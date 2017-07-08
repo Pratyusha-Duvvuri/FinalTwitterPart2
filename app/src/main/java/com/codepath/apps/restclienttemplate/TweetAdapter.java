@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -128,7 +127,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvBody;
         public TextView tvTimeStamp;
         public TextView tvScreenName;
-        public Button replyButton;
+        public ImageButton replyButton;
         public ImageButton retweet;
         public ImageButton favorite;
         public TextView retweetCount;
@@ -150,7 +149,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTimeStamp = (TextView) itemView.findViewById(R.id.tvTimeStamp);
             tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
-            replyButton  = (Button) itemView.findViewById(R.id.ivReply);
+            replyButton  = (ImageButton) itemView.findViewById(R.id.ivReply);
             replyButton.setOnClickListener(this);
             retweet  = (ImageButton) itemView.findViewById(R.id.ivRetweet);
             retweet.setOnClickListener(this);
@@ -192,9 +191,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 else if (v.getId() == R.id.ivRetweet) {
                     Log.d("Cont", "retweet");
 
-
                     if(tweet.retweet_status){
                         tweet.retweet_count-=1;
+                        retweetCount.setText(""+tweet.retweet_count);
+
+                        retweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
+
                         //TweetAdapter.this.notify();
 
                         client.unretweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
@@ -216,7 +218,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
                     else{
                         tweet.retweet_count+=1;
-                       // TweetAdapter.this.notify();
+                        retweet.setImageResource(R.drawable.ic_vector_retweet);
+
+                        retweetCount.setText(""+tweet.retweet_count);
+
+                        // TweetAdapter.this.notify();
 
                         client.retweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
 
@@ -232,11 +238,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
                         }
                     });}
+                    tweet.retweet_status = !tweet.retweet_status;
 
                 } else if (v.getId() == R.id.ivFavorite) {
+
                     Log.d("Cont", "favorite");
                     if(tweet.favorite_status)
                     {
+                        tweet.favorite_count-=1;
+                        favorite.setImageResource(R.drawable.ic_vector_heart_stroke);
+
+                        favoriteCount.setText(""+tweet.favorite_count);
+
+
+
                         //Toast.makeText(context, "INHERE", Toast.LENGTH_SHORT).show();
 
                         client.unfavoriteTweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
@@ -257,7 +272,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
                     }
                     else{
-                    client.favoriteTweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
+                        tweet.favorite_count+=1;
+                        favorite.setImageResource(R.drawable.ic_vector_heart);
+
+                        favoriteCount.setText(""+tweet.favorite_count);
+
+
+                        client.favoriteTweet(Long.toString(tweet.uid), new AsyncHttpResponseHandler() {
 
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -270,7 +291,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
                         }
-                    });}
+                    });
+                        tweet.favorite_status = !tweet.favorite_status;
+
+                    }
                 }
                 else if (v.getId() == R.id.ivProfilePic) {
                     Toast.makeText(context, "Clicked Image", Toast.LENGTH_SHORT).show();

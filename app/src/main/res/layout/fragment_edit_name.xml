@@ -1,0 +1,31 @@
+<!-- fragment_edit_name.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/edit_name"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_gravity="center" android:orientation="vertical"  >
+
+    <TextView
+        android:id="@+id/lbl_your_name"
+        android:layout_width="183dp"
+        android:layout_height="31dp"
+        android:text="Compose a Tweet" />
+
+    <EditText
+        android:id="@+id/txt_your_name"
+        android:layout_width="match_parent"  android:layout_height="85dp"
+        android:inputType="text"
+        android:imeOptions="actionDone" />
+
+    <TextView
+        android:id="@+id/tvCharCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Character Count: 140" />
+
+    <ImageButton
+        android:id="@+id/ivSend"
+        android:layout_width="181dp"
+        android:layout_height="30dp"
+        app:srcCompat="@drawable/ic_send_black_24dp" />
+</LinearLayout>

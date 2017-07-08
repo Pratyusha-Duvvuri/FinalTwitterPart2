@@ -2,8 +2,13 @@ package com.codepath.apps.restclienttemplate.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ProgressBar;
 
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -26,18 +31,37 @@ public class HomeTimelineFragment extends TweetsListFragment {
         super.onCreate(savedInstanceState);
         client = TwitterApp.getRestClient();
 
-
-
         populateTimeline();
 
 
+    }
+    //    //this is for the intermediate progress bar
+    MenuItem miActionProgressItem;
+    ProgressBar v;
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        // Extract the action-view from the menu item
+        v = (ProgressBar) MenuItemCompat.getActionView(miActionProgressItem);
+        // Return to finish
+        //populateTimeline();
 
+        //return super.onPrepareOptionsMenu(menu);
+    }
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
     }
 
 
-
     private void populateTimeline(){
-        //showProgressBar();
+   //     showProgressBar();
 
         client.getHomeTimeline( new JsonHttpResponseHandler(){
             @Override
@@ -68,7 +92,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
                 Log.d("TwitterClient", errorResponse.toString() )    ;
                 throwable.printStackTrace();             }
         });
-       // hideProgressBar();
+      //  hideProgressBar();
 
     }
 

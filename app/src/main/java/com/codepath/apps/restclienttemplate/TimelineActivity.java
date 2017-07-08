@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 
+import com.codepath.apps.restclienttemplate.fragments.EditNameDialogFragment;
 import com.codepath.apps.restclienttemplate.fragments.HomeTimelineFragment;
 import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.fragments.TweetsPagerAdapter;
@@ -20,7 +22,7 @@ import com.codepath.apps.restclienttemplate.models.Tweet;
 
 
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements EditNameDialogFragment.SendDialogListener{
 
 
 //    SwipeRefreshLayout swipeContainer;
@@ -80,10 +82,13 @@ public class TimelineActivity extends AppCompatActivity {
                 TweetsListFragment.setPage(position);
             }
         });
+
         // setup the tab layout to use the view pager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(vpPager);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -132,18 +137,37 @@ public class TimelineActivity extends AppCompatActivity {
     private final int RESULT_OK = 10;
 
     // FirstActivity, launching an activity for a result
+//    public void onComposeAction(MenuItem mi) {
+//        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+//        //i.putExtra("mode", 2); // pass arbitrary data to launched activity
+//        Tweet tweet = new Tweet();
+//        //tweet.user= null;
+//        ;
+//        Tweet tweet = new Tweet();
+//
+//        i.putExtra("tweet",tweet);//Parcels.wrap(t)
+//
+//        startActivityForResult(i, REQUEST_CODE);
+//    }
+
+
+    //attempt of previous function with modal overlay
     public void onComposeAction(MenuItem mi) {
-        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
-        //i.putExtra("mode", 2); // pass arbitrary data to launched activity
+        //setContentView(R.layout.fragment_edit_name);
         Tweet tweet = new Tweet();
-        //tweet.user= null;
-        ;
-        i.putExtra("code",0);//Parcels.wrap(t)
 
-        i.putExtra("tweet",tweet);//Parcels.wrap(t)
-
-        startActivityForResult(i, REQUEST_CODE);
+        FragmentManager fm = getSupportFragmentManager();
+        EditNameDialogFragment editNameDialogFragment = EditNameDialogFragment.newInstance("Some Title",tweet);
+        editNameDialogFragment.show(fm, "fragment_edit_name");
     }
+
+
+    //
+//    public void onFinishEditDialog(String inputText) {
+//        Toast.makeText(this, "Hi, " + inputText, Toast.LENGTH_SHORT).show();
+//
+//    }
+
 
 
     // ActivityOne.java, time to handle the result of the sub-activity aka Compose Activity
@@ -151,7 +175,9 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // REQUEST_CODE is defined above
+//        Toast.makeText(this, "Hi, " + inputText, Toast.LENGTH_SHORT).show();
+// REQUEST_CODE is defined above
+
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             // Extract name value from result extras
             Tweet tweet =  data.getParcelableExtra("tweet");
@@ -170,6 +196,12 @@ public class TimelineActivity extends AppCompatActivity {
 
     }
 
+    public void onFinishEditDialog(Tweet tweet){
 
+        frag = (HomeTimelineFragment) adapter.getItem(0);
+        vpPager.setCurrentItem(0);
+        frag.addTweet(tweet);
+
+    }
 
 }

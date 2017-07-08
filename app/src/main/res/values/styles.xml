@@ -1,3 +1,19 @@
+
+
+
+
+
+<!--<resources>-->
+    <!--<style name="MyTheme" parent="@android:style/Theme.Holo.Light">-->
+        <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
+    <!--</style>-->
+
+    <!--<style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">-->
+        <!--<item name="android:background">"#0084b4"</item>-->
+    <!--</style>-->
+<!--</resources>-->
+
+
 <resources>
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -11,9 +27,13 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <!--<item name="android:windowBackground">@color/twitter_blue</item>-->
+        <!--<item name="android:colorBackground">@color/darkorange</item>-->
     </style>
+
+
 
 </resources>
 
 
-<!--<item name = "android:actionBarStyle:">@style/MyActionBar</item>-->
+<!--&lt;!&ndash;<item name = "android:actionBarStyle:">@style/MyActionBar</item>&ndash;&gt;-->

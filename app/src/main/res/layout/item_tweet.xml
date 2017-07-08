@@ -64,9 +64,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@+id/tvUserName"
 
-            android:text="TextView" />
+            android:text="TextView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -77,12 +78,13 @@
 
         android:clickable="false">
 
-        <Button
+        <ImageButton
             android:id="@+id/ivReply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:text="Reply"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_reply"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true" />
 

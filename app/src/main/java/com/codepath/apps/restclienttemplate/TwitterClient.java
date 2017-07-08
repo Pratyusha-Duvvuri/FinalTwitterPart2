@@ -92,6 +92,24 @@ public class TwitterClient extends OAuthBaseClient {
 		params.put("user_id", uid);
 		client.get(apiUrl, params, handler);
 	}
+	public void getHomeTimelineEndless( AsyncHttpResponseHandler handler, long Id ) {
+		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("count" , 25);
+		params.put("max_id",Id);
+		client.get(apiUrl, params, handler);
+	}
+
+
+	public void getMentionsTimelineEndless(AsyncHttpResponseHandler handler,long Id) {
+		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("count" , 25);
+		params.put("max_id",Id);
+		client.get(apiUrl, params, handler);
+	}
 
 
 	public void unfavoriteTweet(String message, AsyncHttpResponseHandler handler) {
