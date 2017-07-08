@@ -45,16 +45,16 @@
         android:layout_below="@+id/tweetHere"
 
 
-        android:layout_alignParentBottom="true"
-       />
+        />
 
     <TextView
         android:id="@+id/characterCount"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
+        android:text="140"
+        android:layout_below="@+id/tweetHere"
         android:layout_alignParentEnd="true"
-        android:text="140" />
+        android:layout_marginTop="21dp" />
 
     <!--# you wanna change this above line miss-->
 

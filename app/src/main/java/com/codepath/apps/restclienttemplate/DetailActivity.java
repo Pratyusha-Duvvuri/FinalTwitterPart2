@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -69,7 +68,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         Glide.with(this).load(tweet.user.profileImageUrl).into(ivProfileImage);
         if(tweet.imageURL!="urgh") {
 
-            Toast.makeText(this, ""+tweet.imageURL, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, ""+tweet.imageURL, Toast.LENGTH_SHORT).show();
 
             Glide.with(this).load(tweet.imageURL).into(loadedImage);
 

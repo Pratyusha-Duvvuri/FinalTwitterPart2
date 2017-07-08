@@ -19,12 +19,7 @@
         android:title="Compose">
     </item>
 
-    <item
-        android:id="@+id/miBird"
-        android:icon="@drawable/ic_bird"
-        android:gravity = "left"
-        app:showAsAction="ifRoom"
-        android:title="Bird" />
+
 
     <item
         android:id="@+id/miActionProgress"
